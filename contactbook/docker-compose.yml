@@ -1,6 +1,7 @@
 version: "3.7"
 services:
   postgres:
+    container_name: postgres_container
     image: postgres
     environment:
       POSTGRES_USER: postgres
@@ -9,7 +10,6 @@ services:
       - '5432:5432'
     volumes:
       - contactbook-db:/var/lib/postgresql/data
-
   contactbook:
     build:
       context: .
