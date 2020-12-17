@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize(process.env.DB_SCHEMA || 'postgres',
                                 process.env.DB_USER || 'postgres',
-                                process.env.DB_PASSWORD || '',
+                                process.env.DB_PASSWORD || 'postgres',
                                 {
                                     host: process.env.DB_HOST || 'localhost',
                                     port: process.env.DB_PORT || 5432,
@@ -30,9 +30,22 @@ const Car = sequelize.define('Car',{
         type : Sequelize.STRING,
         allowNull : true
     }
-})
+});
+
+const Employee = sequelize.define('Employee',{
+    empName :{
+        type: Sequelize.STRING,
+        allowNull : false
+    },
+    empID:{
+        type : Sequelize.STRING,
+        allowNull:false
+    }
+});
+
 module.exports = {
     sequelize: sequelize,
     Person: Person,
-    Car : Car
+    Car : Car,
+    Employee : Employee
 };

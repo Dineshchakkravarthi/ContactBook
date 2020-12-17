@@ -7,9 +7,28 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports: 
-      - '5432:5432'
+      - "5432:5432"
+    networks: 
+      - postgres
     volumes:
       - contactbook-db:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment: 
+      PGADMIN_DEFAULT_EMAIL : ${PGADMIN_DEFAULT_EMAIL:-postgres}
+      PGADMIN_DEFAULT_PASSWORD  : ${PGADMIN_DEFAULT_PASSWORD:-postgres}
+      # PGADMIN_SERVER_JSON_FILE: ./dbserver.json
+    volumes: 
+      - pgadmin:/var/lib/pgadmin:rw
+    ports: 
+      - "${PGADMIN_PORT:-5050}:80"
+    networks: 
+      - postgres
+    depends_on: 
+      - postgres
+
   contactbook:
     build:
       context: .
@@ -18,11 +37,16 @@ services:
       DB_SCHEMA: postgres
       DB_USER: postgres
       DB_PASSWORD: postgres
-      DB_HOST: postgres
+      DB_HOST: host.docker.internal
     depends_on:
       - postgres
     ports:
       - '3000:3000'
-        
+
+networks: 
+  postgres:
+    driver: bridge
+      
 volumes:
     contactbook-db:
+    pgadmin:
